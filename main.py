@@ -30,37 +30,35 @@ from admin_handlers import (
 )
 
 def main():
-    # Initialize database and users
+    # Initialize database va foydalanuvchilar
     create_tables()
     init_users()
 
-    # Logging configuration
+    # Logging konfiguratsiyasi
     logging.basicConfig(
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-        level=logging.WARNING  # Set root logger to WARNING to suppress INFO logs
+        level=logging.WARNING  # Log darajasini WARNING ga o'rnating
     )
     logger = logging.getLogger(__name__)
 
-    # Suppress httpx logs
+    # httpx va telegram.ext loglarini suspen qilish
     logging.getLogger("httpx").setLevel(logging.WARNING)
-
-    # Suppress telegram.ext logs
     logging.getLogger("telegram").setLevel(logging.WARNING)
     logging.getLogger("telegram.ext").setLevel(logging.WARNING)
 
-    # Create the bot application
-    app = ApplicationBuilder().token(BOT_TOKEN).build()
+    # Bot ilovasini yaratish
+    application = ApplicationBuilder().token(BOT_TOKEN).build()
 
-    # Define ConversationHandler with all necessary states and handlers
+    # ConversationHandler ni aniqlash
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler("start", start_command)],
         states={
 
-            # Main Menu
+            # Asosiy menyu
             State.MAIN_MENU: [
                 MessageHandler(filters.TEXT & ~filters.COMMAND, main_menu_handler),
             ],
-            # Income Handling
+            # Daromadlarni boshqarish
             State.INCOME_SELECT_METHOD: [
                 MessageHandler(filters.TEXT & ~filters.COMMAND, income_select_method_handler),
             ],
@@ -70,7 +68,7 @@ def main():
             State.INCOME_CHECK_CONFIRM: [
                 MessageHandler(filters.TEXT & ~filters.COMMAND, income_check_confirm_handler),
             ],
-            # Expense Handling
+            # Xarajatlarni boshqarish
             State.EXPENSE_ENTER: [
                 MessageHandler(filters.TEXT & ~filters.COMMAND, expense_enter_handler),
             ],
@@ -83,37 +81,37 @@ def main():
             State.EXPENSE_CHECK_CONFIRM: [
                 MessageHandler(filters.TEXT & ~filters.COMMAND, expense_check_confirm_handler),
             ],
-            # Admin Menu
+            # Admin menyusi
             State.ADMIN_MENU: [
                 MessageHandler(filters.TEXT & ~filters.COMMAND, admin_menu_handler),
             ],
-            # Admin Filial Selection
+            # Admin filial tanlash
             State.ADMIN_SELECT_FILIAL: [
                 CallbackQueryHandler(admin_select_filial_callback, pattern=r"filial_\d+"),
             ],
-            # Admin Period Selection for "Daromad va Xarajatlar"
+            # Admin davr tanlash
             State.ADMIN_SELECT_PERIOD: [
                 MessageHandler(filters.TEXT & ~filters.COMMAND, admin_select_period_handler),
             ],
-            State.ADMIN_SELECT_CUSTOM_PERIOD: [  # Newly added
+            State.ADMIN_SELECT_CUSTOM_PERIOD: [  # Yangi qo'shilgan
                 MessageHandler(filters.TEXT & ~filters.COMMAND, admin_select_period_handler),
             ],
             State.ADMIN_ENTER_PERIOD_MANUAL: [
                 MessageHandler(filters.TEXT & ~filters.COMMAND, admin_enter_period_manual_handler),
             ],
-            # Admin Report Viewing
+            # Admin hisobot ko'rish
             State.ADMIN_VIEW_REPORT: [
                 MessageHandler(filters.TEXT & ~filters.COMMAND, admin_menu_handler),
             ],
-            # User Management
+            # Foydalanuvchilarni boshqarish
             State.USER_MANAGEMENT: [
                 MessageHandler(filters.TEXT & ~filters.COMMAND, admin_menu_handler),
             ],
-            # Admin Today's Data Viewing
+            # Admin bugungi ma'lumotlarni ko'rish
             State.ADMIN_TODAY_VIEW: [
                 MessageHandler(filters.ALL, admin_today_view_handler),
             ],
-            # Export States
+            # Export qilish holatlari
             State.ADMIN_EXPORT_FILIAL: [
                 CallbackQueryHandler(admin_export_filial_callback, pattern=r"filial_\d+"),
             ],
@@ -124,16 +122,16 @@ def main():
             State.ADMIN_EXPORT_FORMAT: [
                 CallbackQueryHandler(export_format_callback, pattern=r"export_(pdf|excel)")
             ],
-            # "Malumotlar" Filial Selection
+            # "Malumotlar" filial tanlash
             State.ADMIN_SELECT_TODAY_FILIAL: [
                 CallbackQueryHandler(admin_select_today_filial_callback, pattern=r"filial_\d+"),
             ],
-            # "Malumotlar" Data Navigation
+            # "Malumotlar" ma'lumotlarni navigatsiya qilish
             State.ADMIN_NAVIGATE_DATA: [
                 CallbackQueryHandler(navigate_forward_handler, pattern=r"navigate_forward_\d+"),
                 CallbackQueryHandler(navigate_back_handler, pattern=r"navigate_back_\d+"),
             ],
-            # New State for "Malumotlar" Period Selection (Bugungi and Kechagi only)
+            # Yangi holat "Malumotlar" davr tanlash
             State.ADMIN_SELECT_TODAY_PERIOD: [
                 MessageHandler(filters.TEXT & ~filters.COMMAND, admin_select_period_handler),
             ],
@@ -143,20 +141,20 @@ def main():
         ],
     )
 
-    # Add ConversationHandler to the application
-    app.add_handler(conv_handler)
+    # ConversationHandler ni botga qo'shish
+    application.add_handler(conv_handler)
 
-    # Add handler for admin approval callbacks
-    app.add_handler(
+    # Admin tasdiqlash callback handler
+    application.add_handler(
         CallbackQueryHandler(
             admin_callback_approval,
             pattern=r"(income|expense)_(approve|reject)_\d+"
         )
     )
 
-    # Start the bot
+    # Botni ishga tushurish
     print("Bot ishga tushmoqda...")
-    app.run_polling()
+    application.run_polling()
 
 if __name__ == "__main__":
     main()
