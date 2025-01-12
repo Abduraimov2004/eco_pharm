@@ -1,6 +1,8 @@
 
-
-BOT_TOKEN ="7659295768:AAED-l0VC8bzsM6JbZEtNlgr1Wa-25Yv_Pc" # BotFatherdan olingan tokenni shu yerga yozasiz
+import os
+from dotenv import load_dotenv
+load_dotenv()
+BOT_TOKEN =os.getenv("BOT_TOKEN") # BotFatherdan olingan tokenni shu yerga yozasiz
 
 
 ADMIN_IDS = [1753386725]  # Admin telegram_id (o'zingizning real ID'niz)
