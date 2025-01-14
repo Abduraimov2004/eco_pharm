@@ -5,7 +5,7 @@ load_dotenv()
 BOT_TOKEN =os.getenv("BOT_TOKEN") # BotFatherdan olingan tokenni shu yerga yozasiz
 
 
-ADMIN_IDS = [1753386725]  # Admin telegram_id (o'zingizning real ID'niz)
+ADMIN_IDS = [1753386725,18876351]  # Admin telegram_id (o'zingizning real ID'niz)
 
 FILIALS = {
     1: "Filial-1",
