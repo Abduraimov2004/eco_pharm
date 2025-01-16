@@ -1,5 +1,5 @@
 
-BOT_TOKEN ="7659295768:AAED-l0VC8bzsM6JbZEtNlgr1Wa-25Yv_Pc" # BotFatherdan olingan tokenni shu yerga yozasiz
+BOT_TOKEN ="8046371114:AAHYUDxg-k849VXAGAnNr4cnLMvemAOqTks" # BotFatherdan olingan tokenni shu yerga yozasiz
 
 
 ADMIN_IDS = [1753386725,18876351]  # Admin telegram_id (o'zingizning real ID'niz)
